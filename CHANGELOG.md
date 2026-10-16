@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.80
+
+[compare changes](https://github.com/RealTimeMap/RTM-app-frontend/compare/v0.1.79...v0.1.80)
+
+### ⬆️ Обновления
+
+- **ui:** Welcome text ([0c4146a](https://github.com/RealTimeMap/RTM-app-frontend/commit/0c4146a))
+
+### ❤️ Contributors
+
+- Hell-soon <pmaks2365@gmail.com>
+
 ## v0.1.79
 
 [compare changes](https://github.com/RealTimeMap/RTM-app-frontend/compare/v0.1.78...v0.1.79)
