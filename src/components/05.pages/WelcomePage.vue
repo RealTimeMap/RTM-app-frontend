@@ -11,67 +11,148 @@ declare const __APP_VERSION__: string
 
 const { completeOnboarding } = useOnboarding()
 const currentIndex = ref(0)
-const totalSlides = 5
 
 const appVersion = __APP_VERSION__
 const isNative = Capacitor.isNativePlatform()
 
-interface SnakePath {
+// ---------- Фон: улицы и огоньки-метки ----------
+
+interface Street {
   id: number
   d: string
-  color: string
   width: number
+}
+
+interface Light {
+  id: number
+  x: number
+  y: number
+  size: number
+  color: string
   duration: number
   delay: number
 }
-const snakes = ref<SnakePath[]>([])
+
+const LIGHT_COLORS = ['var(--primary-color)', '#f59e0b', '#ec4899', '#38bdf8', 'var(--primary-color)']
+
+const streets = ref<Street[]>([])
+const lights = ref<Light[]>([])
 
 const random = (min: number, max: number) => Math.random() * (max - min) + min
-
-const COLORS = ['#2080f0', '#18a058', '#d03050', '#f0a020']
 
 onMounted(() => {
   const width = window.innerWidth
   const height = window.innerHeight
-  const count = 12
 
-  snakes.value = Array.from({ length: count }).map((_, i) => {
-    const startY = random(0, height)
-    const endY = random(0, height)
-    const cp1x = width * 0.3
-    const cp1y = random(0, height)
-    const cp2x = width * 0.7
-    const cp2y = random(0, height)
-    const pathData = `M -100,${startY} C ${cp1x},${cp1y} ${cp2x},${cp2y} ${width + 100},${endY}`
-
-    return {
-      id: i,
-      d: pathData,
-      color: COLORS[Math.floor(random(0, COLORS.length))] as string,
-      width: random(3, 6),
-      duration: random(8, 15),
-      delay: random(0, 5),
-    }
+  streets.value = Array.from({ length: 14 }).map((_, i) => {
+    const vertical = i % 2 === 0
+    const base = vertical ? random(0, width) : random(0, height)
+    const drift = random(-120, 120)
+    const d = vertical
+      ? `M ${base},-20 Q ${base + drift},${height / 2} ${base + drift / 2},${height + 20}`
+      : `M -20,${base} Q ${width / 2},${base + drift} ${width + 20},${base + drift / 2}`
+    return { id: i, d, width: random(1, i % 5 === 0 ? 6 : 3) }
   })
+
+  lights.value = Array.from({ length: 16 }).map((_, i) => ({
+    id: i,
+    x: random(4, 96),
+    y: random(4, 96),
+    size: random(6, 12),
+    color: LIGHT_COLORS[i % LIGHT_COLORS.length]!,
+    duration: random(6, 11),
+    delay: random(0, 10),
+  }))
 })
 
-const slides = [
-  { key: 'about', color: '#2080f0', icon: 'app:pin-wave' },
-  { key: 'team', color: '#18a058', icon: 'app:laptop' },
-  { key: 'download', color: '#7c4dff', icon: 'app:smartphone' },
-  { key: 'roadmap', color: '#f0a020', icon: 'app:route' },
-  { key: 'safety', color: '#d03050', icon: 'app:alert-loop' },
+// ---------- Слайды ----------
+
+interface Feature {
+  icon: string
+  title: string
+  text: string
+}
+
+interface Slide {
+  key: 'intro' | 'lifespan' | 'people' | 'app' | 'roadmap' | 'rules'
+  accent: string
+  icon: string
+  title: string
+  text: string
+  features?: Feature[]
+}
+
+const slides: Slide[] = [
+  {
+    key: 'intro',
+    accent: 'var(--primary-color)',
+    icon: 'app:pin-wave',
+    title: APP_NAME,
+    text: 'Карта, на которой город светится живыми метками. Каждая метка — огонёк: событие, место или встреча прямо сейчас.',
+    features: [
+      { icon: 'app:pin-plus', title: 'Зажги метку', text: 'Отметь, что происходит вокруг тебя' },
+      { icon: 'app:map-loop', title: 'Смотри, где светит', text: 'Метки людей рядом появляются в реальном времени' },
+    ],
+  },
+  {
+    key: 'lifespan',
+    accent: '#f59e0b',
+    icon: 'app:flame-loop',
+    title: 'Метка светит, пока актуальна',
+    text: 'Задай, сколько метке гореть. Когда событие закончится, огонёк погаснет сам — на карте только то, что происходит сейчас.',
+    features: [
+      { icon: 'app:gallery', title: 'Фото и описание', text: 'Покажи, что происходит, а не просто точку' },
+      { icon: 'app:calendar', title: 'Время жизни', text: 'Выбери, когда метка погаснет' },
+      { icon: 'app:route', title: 'Маршрут', text: 'Доберись до любой метки в пару нажатий' },
+    ],
+  },
+  {
+    key: 'people',
+    accent: '#ec4899',
+    icon: 'app:people-loop',
+    title: 'Свет собирает людей',
+    text: 'Вокруг каждой метки — люди, которым тоже интересно. Обсуждай, договаривайся о встрече, расти вместе с картой.',
+    features: [
+      { icon: 'app:heart', title: 'Лайки и комментарии', text: 'Поддержи метку и задай вопрос автору' },
+      { icon: 'app:chat-loop', title: 'Чаты', text: 'Пиши напрямую тем, кто рядом' },
+      { icon: 'app:trophy-loop', title: 'Уровни и достижения', text: 'Чем ярче ты светишь, тем выше уровень' },
+    ],
+  },
+  {
+    key: 'app',
+    accent: '#38bdf8',
+    icon: 'app:smartphone',
+    title: 'Всегда под рукой',
+    text: 'Пользуйся в браузере или установи приложение для Android — с уведомлениями и работой офлайн.',
+    features: [
+      { icon: 'app:bell', title: 'Android', text: 'Узнаешь о новых метках и сообщениях сразу' },
+      { icon: 'app:globe-loop', title: 'Веб и PWA', text: 'Работает в любом браузере без установки' },
+    ],
+  },
+  {
+    key: 'roadmap',
+    accent: '#22c55e',
+    icon: 'app:rocket-loop',
+    title: 'Что зажжём дальше',
+    text: 'Мы активно развиваем приложение. Вот что уже в работе и что впереди.',
+  },
+  {
+    key: 'rules',
+    accent: '#ef4444',
+    icon: 'app:alert-loop',
+    title: 'Пара важных слов',
+    text: 'Приложение в активной разработке: возможны сбои и очистка данных.',
+  },
 ]
 
-const isLastSlide = computed(() => currentIndex.value === totalSlides - 1)
+const current = computed(() => slides[currentIndex.value]!)
+const isLastSlide = computed(() => currentIndex.value === slides.length - 1)
 
 async function handleNext() {
-  if (isLastSlide.value) {
+  if (isLastSlide.value)
     await completeOnboarding()
-  }
-  else {
+  else
     currentIndex.value++
-  }
 }
 
 function openGithub() {
@@ -80,330 +161,195 @@ function openGithub() {
 </script>
 
 <template>
-  <div class="welcome-container">
-    <svg class="snake-background">
-      <g
-        v-for="snake in snakes"
-        :key="snake.id"
-      >
+  <div
+    class="welcome"
+    :style="{ '--accent': current.accent }"
+  >
+    <div
+      class="city"
+      aria-hidden="true"
+    >
+      <svg class="city__streets">
         <path
-          :d="snake.d"
-          fill="none"
-          :stroke="snake.color"
-          :stroke-width="snake.width"
-          opacity="0.1"
+          v-for="street in streets"
+          :key="street.id"
+          :d="street.d"
+          :stroke-width="street.width"
         />
+      </svg>
 
-        <path
-          class="snake-runner"
-          :d="snake.d"
-          fill="none"
-          :stroke="snake.color"
-          :stroke-width="snake.width"
-          stroke-linecap="round"
-          :style="{
-            animationDuration: `${snake.duration}s`,
-            animationDelay: `-${snake.delay}s`,
-          }"
-        />
-      </g>
-    </svg>
+      <span
+        v-for="light in lights"
+        :key="light.id"
+        class="city__light"
+        :style="{
+          'left': `${light.x}%`,
+          'top': `${light.y}%`,
+          'width': `${light.size}px`,
+          'height': `${light.size}px`,
+          '--light': light.color,
+          'animationDuration': `${light.duration}s`,
+          'animationDelay': `-${light.delay}s`,
+        }"
+      />
+    </div>
 
-    <div class="welcome-card-glass">
-      <div class="card-layout">
-        <div class="welcome-carousel-viewport">
-          <transition
-            name="slide-fade"
-            mode="out-in"
+    <div class="welcome-card">
+      <div class="welcome-card__viewport">
+        <transition
+          name="slide-fade"
+          mode="out-in"
+        >
+          <div
+            :key="current.key"
+            class="slide"
           >
-            <!-- Слайд 1: О приложении -->
-            <div
-              v-if="currentIndex === 0"
-              key="about"
-              class="slide-wrapper"
+            <div class="beacon">
+              <span class="beacon__ring" />
+              <span class="beacon__ring beacon__ring--late" />
+              <div class="beacon__core">
+                <u-icon
+                  :icon="current.icon"
+                  height="44"
+                  width="44"
+                />
+              </div>
+            </div>
+
+            <component
+              :is="current.key === 'intro' ? 'h1' : 'h2'"
+              class="slide__title"
+              :class="{ 'slide__title--brand': current.key === 'intro' }"
             >
-              <div class="slide-scroll-area">
-                <div
-                  class="icon-box"
-                  :style="{ background: `rgba(32, 128, 240, 0.1)`, color: '#2080f0' }"
-                >
+              {{ current.title }}
+            </component>
+            <p class="slide__text">
+              {{ current.text }}
+            </p>
+
+            <div
+              v-if="current.features"
+              class="features"
+            >
+              <div
+                v-for="(feature, i) in current.features"
+                :key="feature.title"
+                class="feature"
+                :style="{ animationDelay: `${0.12 + i * 0.08}s` }"
+              >
+                <div class="feature__icon">
                   <u-icon
-                    :icon="slides[0].icon"
-                    height="56"
-                    width="56"
+                    :icon="feature.icon"
+                    height="20"
+                    width="20"
                   />
                 </div>
-
-                <h1 class="slide-title">
-                  {{ APP_NAME }}
-                </h1>
-                <p class="description">
-                  Интерактивная карта для обмена событиями и координатами в реальном времени.
-                </p>
-
-                <div class="features-list">
-                  <div class="feature-item">
-                    <div class="feature-icon">
-                      📍
-                    </div>
-                    <div class="feature-text">
-                      <strong>Геолокация</strong>
-                      <span>Точная привязка событий к карте</span>
-                    </div>
-                  </div>
-                  <div class="feature-item">
-                    <div class="feature-icon">
-                      ⚡
-                    </div>
-                    <div class="feature-text">
-                      <strong>Live Sync</strong>
-                      <span>Мгновенное обновление данных (WebSocket)</span>
-                    </div>
-                  </div>
+                <div class="feature__text">
+                  <strong>{{ feature.title }}</strong>
+                  <span>{{ feature.text }}</span>
                 </div>
               </div>
             </div>
 
-            <!-- Слайд 2: Стек -->
-            <div
-              v-else-if="currentIndex === 1"
-              key="stack"
-              class="slide-wrapper"
-            >
-              <div class="slide-scroll-area">
-                <div
-                  class="icon-box"
-                  :style="{ background: `rgba(24, 160, 88, 0.1)`, color: '#18a058' }"
-                >
-                  <u-icon
-                    :icon="slides[1].icon"
-                    height="56"
-                    width="56"
-                  />
-                </div>
-
-                <h2 class="slide-title">
-                  Технологии
-                </h2>
-                <p class="description">
-                  Проект создан энтузиастами для изучения современных архитектурных решений.
-                </p>
-
-                <div class="stack-section">
-                  <div class="stack-group">
-                    <span class="stack-label">Frontend</span>
-                    <div class="tags-row">
-                      <span class="u-tag u-tag--success">Vue 3</span>
-                      <span class="u-tag u-tag--success">TypeScript</span>
-                      <span class="u-tag u-tag--success">Vite</span>
-                    </div>
-                  </div>
-
-                  <div class="stack-group">
-                    <span class="stack-label">Backend</span>
-                    <div class="tags-row">
-                      <span class="u-tag u-tag--info">Golang (Gin)</span>
-                      <span class="u-tag u-tag--info">Python (FastAPI)</span>
-                    </div>
-                  </div>
-
-                  <div class="stack-group">
-                    <span class="stack-label">Infrastructure</span>
-                    <div class="tags-row">
-                      <span class="u-tag u-tag--warning">PostgreSQL</span>
-                      <span class="u-tag u-tag--error">Kafka</span>
-                      <span class="u-tag u-tag--primary">gRPC</span>
-                    </div>
-                  </div>
-                </div>
+            <template v-if="current.key === 'app'">
+              <div class="version-badge">
+                Текущая версия · v{{ appVersion }}
               </div>
-            </div>
 
-            <!-- Слайд 3: Приложение и версия -->
-            <div
-              v-else-if="currentIndex === 2"
-              key="download"
-              class="slide-wrapper"
-            >
-              <div class="slide-scroll-area">
-                <div
-                  class="icon-box"
-                  :style="{ background: `rgba(124, 77, 255, 0.1)`, color: '#7c4dff' }"
-                >
-                  <u-icon
-                    :icon="slides[2].icon"
-                    height="56"
-                    width="56"
-                  />
-                </div>
+              <button
+                v-if="!isNative"
+                type="button"
+                class="download-btn"
+                @click="downloadAndroidApp"
+              >
+                <u-icon
+                  icon="app:download"
+                  height="18"
+                  width="18"
+                />
+                Скачать для Android
+              </button>
+            </template>
 
-                <h2 class="slide-title">
-                  Приложение
-                </h2>
-                <p class="description">
-                  Пользуйтесь в браузере или установите Android-приложение (.apk)
-                  для пушей и работы офлайн.
-                </p>
+            <roadmap-timeline
+              v-if="current.key === 'roadmap'"
+              compact
+            />
 
-                <div class="features-list">
-                  <div class="feature-item">
-                    <div class="feature-icon">
-                      🤖
-                    </div>
-                    <div class="feature-text">
-                      <strong>Android (.apk)</strong>
-                      <span>Нативная версия с уведомлениями</span>
-                    </div>
-                  </div>
-                  <div class="feature-item">
-                    <div class="feature-icon">
-                      🌐
-                    </div>
-                    <div class="feature-text">
-                      <strong>Веб / PWA</strong>
-                      <span>Работает в любом браузере без установки</span>
-                    </div>
-                  </div>
-                </div>
+            <template v-if="current.key === 'rules'">
+              <ul class="rules">
+                <li>
+                  Нажимая «Открыть карту», вы подтверждаете, что ознакомлены и согласны с
+                  <button
+                    type="button"
+                    class="rules__link"
+                    @click="openCommunityRules()"
+                  >
+                    Правилами сообщества
+                  </button>
+                  и
+                  <button
+                    type="button"
+                    class="rules__link"
+                    @click="openPrivacyPolicy()"
+                  >
+                    Политикой конфиденциальности
+                  </button>.
+                </li>
+                <li>Не передавайте доступ к аккаунту третьим лицам.</li>
+              </ul>
 
-                <div class="version-badge">
-                  Текущая версия · v{{ appVersion }}
-                </div>
+              <button
+                type="button"
+                class="github-btn"
+                @click="openGithub"
+              >
+                <u-icon
+                  icon="app:github"
+                  height="16"
+                  width="16"
+                />
+                Исходный код на GitHub
+              </button>
+            </template>
+          </div>
+        </transition>
+      </div>
 
-                <button
-                  v-if="!isNative"
-                  type="button"
-                  class="download-app-btn"
-                  @click="downloadAndroidApp"
-                >
-                  <u-icon
-                    icon="app:download"
-                    height="18"
-                    width="18"
-                  />
-                  Скачать для Android
-                </button>
-              </div>
-            </div>
-
-            <!-- Слайд 4: Дорожная карта -->
-            <div
-              v-else-if="currentIndex === 3"
-              key="roadmap"
-              class="slide-wrapper"
-            >
-              <div class="slide-scroll-area">
-                <div
-                  class="icon-box"
-                  :style="{ background: `rgba(240, 160, 32, 0.1)`, color: '#f0a020' }"
-                >
-                  <u-icon
-                    :icon="slides[3].icon"
-                    height="56"
-                    width="56"
-                  />
-                </div>
-
-                <h2 class="slide-title">
-                  Планы развития
-                </h2>
-                <p class="description">
-                  Мы активно развиваем приложение. Вот что уже в работе и что впереди.
-                </p>
-
-                <roadmap-timeline compact />
-              </div>
-            </div>
-
-            <!-- Слайд 5: Важно -->
-            <div
-              v-else-if="currentIndex === 4"
-              key="safety"
-              class="slide-wrapper"
-            >
-              <div class="slide-scroll-area">
-                <div
-                  class="icon-box"
-                  :style="{ background: `rgba(208, 48, 80, 0.1)`, color: '#d03050' }"
-                >
-                  <u-icon
-                    :icon="slides[4].icon"
-                    height="56"
-                    width="56"
-                  />
-                </div>
-
-                <h2 class="slide-title">
-                  Внимание
-                </h2>
-
-                <div class="safety-alert-custom">
-                  <div style="font-weight: 600; margin-bottom: 4px;">
-                    ⚠️ Work in Progress
-                  </div>
-                  Приложение в активной разработке. Возможны сбои и очистка данных.
-                </div>
-
-                <div class="rules-block">
-                  <ul class="u-ul">
-                    <li class="u-li">
-                      Нажимая «Начать использование», вы подтверждаете, что
-                      ознакомлены и согласны с
-                      <button
-                        type="button"
-                        class="rules-inline-link"
-                        @click="openCommunityRules()"
-                      >
-                        Правилами сообщества
-                      </button>
-                      и
-                      <button
-                        type="button"
-                        class="rules-inline-link"
-                        @click="openPrivacyPolicy()"
-                      >
-                        Политикой конфиденциальности
-                      </button>.
-                    </li>
-                    <li class="u-li">
-                      Не передавайте доступ третьим лицам.
-                    </li>
-                  </ul>
-                </div>
-
-                <button
-                  type="button"
-                  class="github-link-btn"
-                  @click="openGithub"
-                >
-                  <u-icon
-                    icon="app:github"
-                    height="16"
-                    width="16"
-                  />
-                  GitHub Repo
-                </button>
-              </div>
-            </div>
-          </transition>
-        </div>
-
-        <div class="footer-actions glass-footer">
+      <div class="welcome-card__footer">
+        <div
+          class="dots"
+          role="tablist"
+        >
           <button
+            v-for="(slide, i) in slides"
+            :key="slide.key"
             type="button"
-            class="button primary action-btn"
-            @click="handleNext"
-          >
-            {{ isLastSlide ? 'Начать использование' : 'Далее' }}
-          </button>
+            role="tab"
+            class="dots__item"
+            :class="{ 'dots__item--active': i === currentIndex, 'dots__item--passed': i < currentIndex }"
+            :aria-selected="i === currentIndex"
+            :aria-label="`Слайд ${i + 1}`"
+            @click="currentIndex = i"
+          />
         </div>
+
+        <button
+          type="button"
+          class="button primary action-btn"
+          @click="handleNext"
+        >
+          {{ isLastSlide ? 'Открыть карту' : 'Далее' }}
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.welcome-container {
+.welcome {
+  --accent: var(--primary-color);
+
   position: relative;
   display: flex;
   align-items: center;
@@ -412,137 +358,262 @@ function openGithub() {
   padding: calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(16px + var(--safe-bottom))
     calc(16px + var(--safe-left));
   overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%),
+    var(--bg-body);
+  transition: background 0.6s ease;
 }
 
-/* --- Змейки --- */
-.snake-background {
+/* --- Фон: город с огоньками --- */
+.city {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   pointer-events: none;
   z-index: 0;
-}
 
-.snake-runner {
-  stroke-dasharray: 150 1800;
-  stroke-dashoffset: 1950;
-  animation: snakeMove linear infinite;
-  will-change: stroke-dashoffset;
-}
+  &__streets {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
 
-@keyframes snakeMove {
-  to {
-    stroke-dashoffset: -1950;
+    path {
+      fill: none;
+      stroke: var(--text-color);
+      stroke-linecap: round;
+      opacity: 0.06;
+    }
+  }
+
+  &__light {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--light);
+    box-shadow:
+      0 0 12px 3px color-mix(in srgb, var(--light) 60%, transparent),
+      0 0 32px 8px color-mix(in srgb, var(--light) 25%, transparent);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2);
+    animation: light-life ease-in-out infinite;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 1.5px solid var(--light);
+      animation: light-ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
   }
 }
 
-/* --- Glassmorphism Card --- */
-.welcome-card-glass {
+@keyframes light-life {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+  20%,
+  70% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+}
+
+@keyframes light-ping {
+  from {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(3.4);
+    opacity: 0;
+  }
+}
+
+/* --- Карточка --- */
+.welcome-card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 440px;
-  height: 650px;
+  height: 660px;
   max-height: 90vh;
   border-radius: 32px;
   background: var(--glass-background);
   border: 1px solid var(--border-subtle);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-  z-index: 1;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.2),
+    0 0 0 1px color-mix(in srgb, var(--accent) 10%, transparent);
+  transition: box-shadow 0.6s ease;
+
+  &__viewport {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  &__footer {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 12px 24px 24px;
+  }
 }
 
-.card-layout {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-}
-
-.welcome-carousel-viewport {
-  flex: 1;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-}
-
-/* --- Слайды --- */
-.slide-wrapper {
+/* --- Слайд --- */
+.slide {
   position: absolute;
   inset: 0;
   display: flex;
   flex-direction: column;
-}
-
-.slide-scroll-area {
-  flex: 1;
-  padding: 40px 24px 10px 24px;
-  display: flex;
-  flex-direction: column;
   align-items: center;
+  padding: 44px 24px 8px;
   text-align: center;
   overflow-y: auto;
   scrollbar-width: none;
+
   &::-webkit-scrollbar {
     display: none;
   }
+
+  &__title {
+    margin: 0 0 10px;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text-color);
+
+    &--brand {
+      font-size: 34px;
+      letter-spacing: -1px;
+      background: linear-gradient(120deg, var(--text-color) 30%, var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+  }
+
+  &__text {
+    margin: 0 0 24px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--text-color);
+    opacity: 0.72;
+  }
 }
 
-.icon-box {
-  margin-bottom: 24px;
-  padding: 20px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+/* --- Маяк-метка --- */
+.beacon {
+  position: relative;
+  flex-shrink: 0;
+  width: 96px;
+  height: 96px;
+  margin-bottom: 22px;
+
+  &__core {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, var(--bg-block-solid));
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent),
+      0 0 36px 4px color-mix(in srgb, var(--accent) 35%, transparent);
+    animation: beacon-glow 2.6s ease-in-out infinite;
+  }
+
+  &__ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    opacity: 0;
+    animation: beacon-ring 2.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+
+    &--late {
+      animation-delay: 1.3s;
+    }
+  }
 }
 
-.slide-title {
-  margin: 0 0 12px 0;
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--text-color);
-  letter-spacing: -0.5px;
+@keyframes beacon-glow {
+  50% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent),
+      0 0 52px 10px color-mix(in srgb, var(--accent) 45%, transparent);
+  }
 }
 
-.description {
-  font-size: 15px;
-  color: var(--text-color);
-  opacity: 0.7;
-  margin-bottom: 32px;
-  line-height: 1.6;
+@keyframes beacon-ring {
+  from {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(1.6);
+    opacity: 0;
+  }
 }
 
-.features-list {
+/* --- Возможности --- */
+.features {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
   text-align: left;
 }
 
-.feature-item {
+.feature {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 12px 16px;
+  gap: 14px;
+  padding: 12px 14px;
   border-radius: 16px;
   background: var(--surface-subtle);
   border: 1px solid var(--border-subtle);
+  animation: feature-in 0.4s ease both;
 
-  .feature-icon {
-    font-size: 22px;
+  &__icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
   }
-  .feature-text {
+
+  &__text {
     display: flex;
     flex-direction: column;
+    gap: 2px;
     font-size: 13px;
+
     strong {
-      margin-bottom: 2px;
       color: var(--text-color);
     }
+
     span {
       color: var(--text-color);
       opacity: 0.7;
@@ -550,72 +621,16 @@ function openGithub() {
   }
 }
 
-/* --- Стек и Кастомные теги --- */
-.stack-section {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.stack-group {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.stack-label {
-  font-size: 11px;
-  text-transform: uppercase;
-  font-weight: 700;
-  color: var(--text-color);
-  opacity: 0.5;
-  margin-left: 4px;
-}
-
-.tags-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.u-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-  background: var(--surface-subtle);
-  color: var(--text-color);
-  border: 1px solid var(--border-subtle);
-
-  &--success {
-    color: #18a058;
-    background: rgba(24, 160, 88, 0.1);
-  }
-  &--info {
-    color: #2080f0;
-    background: rgba(32, 128, 240, 0.1);
-  }
-  &--warning {
-    color: #f0a020;
-    background: rgba(240, 160, 32, 0.1);
-  }
-  &--error {
-    color: #d03050;
-    background: rgba(208, 48, 80, 0.1);
-  }
-  &--primary {
-    color: #7aafeb;
-    background: rgba(122, 175, 235, 0.1);
+@keyframes feature-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
 }
 
 /* --- Слайд приложения --- */
 .version-badge {
-  margin-top: 20px;
+  margin-top: 18px;
   padding: 8px 16px;
   border-radius: 999px;
   font-size: 13px;
@@ -625,75 +640,60 @@ function openGithub() {
   border: 1px solid var(--border-subtle);
 }
 
-.download-app-btn {
-  margin-top: 14px;
+.download-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  margin-top: 14px;
   padding: 12px 20px;
-  border-radius: 14px;
   border: none;
-  cursor: pointer;
+  border-radius: 14px;
   font-size: 15px;
   font-weight: 600;
   color: #fff;
-  background: #7c4dff;
-  box-shadow: 0 8px 18px rgba(124, 77, 255, 0.35);
+  background: var(--accent);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 40%, transparent);
+  cursor: pointer;
 }
 
-/* --- Блок предупреждений --- */
-.safety-alert-custom {
+/* --- Правила --- */
+.rules {
   width: 100%;
+  margin: 0 0 20px;
+  padding-left: 20px;
   text-align: left;
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 20px;
-  background: rgba(240, 160, 32, 0.1);
-  color: #f0a020;
-  border: 1px solid rgba(240, 160, 32, 0.2);
   font-size: 14px;
   line-height: 1.5;
-}
-
-.rules-block {
-  text-align: left;
-  font-size: 14px;
   color: var(--text-color);
-  width: 100%;
-  margin-bottom: 24px;
 
-  .u-ul {
-    padding-left: 20px;
-    margin: 0;
-  }
-  .u-li {
+  li {
     margin-bottom: 8px;
     opacity: 0.8;
   }
+
+  &__link {
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    font-weight: 600;
+    color: var(--primary-color);
+    text-decoration: underline;
+    cursor: pointer;
+  }
 }
 
-.rules-inline-link {
-  padding: 0;
-  border: none;
-  background: none;
-  color: var(--primary-color);
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.github-link-btn {
-  margin-top: auto;
-  background: transparent;
-  border: none;
+.github-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--text-color);
-  opacity: 0.6;
+  margin-top: auto;
+  border: none;
+  background: transparent;
   font-size: 14px;
   font-weight: 500;
+  color: var(--text-color);
+  opacity: 0.6;
   cursor: pointer;
   transition: opacity 0.2s;
 
@@ -703,10 +703,33 @@ function openGithub() {
 }
 
 /* --- Футер --- */
-.footer-actions {
-  flex-shrink: 0;
-  padding: 24px;
-  padding-top: 16px;
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+
+  &__item {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: var(--border-subtle);
+    cursor: pointer;
+    transition:
+      width 0.3s ease,
+      background 0.3s ease;
+
+    &--passed {
+      background: color-mix(in srgb, var(--accent) 45%, transparent);
+    }
+
+    &--active {
+      width: 24px;
+      background: var(--accent);
+      box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 60%, transparent);
+    }
+  }
 }
 
 .action-btn {
@@ -716,10 +739,12 @@ function openGithub() {
   font-weight: 600;
 }
 
-/* --- Анимация кастомных переходов слайдов --- */
+/* --- Переходы --- */
 .slide-fade-enter-active,
 .slide-fade-leave-active {
-  transition: all 0.25s ease-in-out;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
 }
 
 .slide-fade-enter-from {
@@ -730,5 +755,20 @@ function openGithub() {
 .slide-fade-leave-to {
   opacity: 0;
   transform: translateX(-30px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .city__light,
+  .city__light::after,
+  .beacon__core,
+  .beacon__ring,
+  .feature {
+    animation: none;
+  }
+
+  .city__light {
+    opacity: 0.8;
+    transform: translate(-50%, -50%);
+  }
 }
 </style>
