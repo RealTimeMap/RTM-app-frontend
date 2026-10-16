@@ -1,4 +1,5 @@
 import { execSync } from 'node:child_process'
+import { readFileSync } from 'node:fs'
 import process from 'node:process'
 import { fileURLToPath, URL } from 'node:url'
 import vue from '@vitejs/plugin-vue'
@@ -23,9 +24,16 @@ function resolveAppVersion(): string {
   }
 }
 
+const APP_NAME: string = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')).productName
+
 export default defineConfig(({ command }) => ({
   plugins: [
     vue(),
+
+    {
+      name: 'app-name-html',
+      transformIndexHtml: html => html.replaceAll('%APP_NAME%', APP_NAME),
+    },
 
     ...(command === 'serve' ? [vueDevTools()] : []),
 
@@ -68,8 +76,8 @@ export default defineConfig(({ command }) => ({
         'maskable-512x512.png',
       ],
       manifest: {
-        name: 'RealTimeMap — карта мест и меток',
-        short_name: 'RealTimeMap',
+        name: `${APP_NAME} — карта мест и меток`,
+        short_name: APP_NAME,
         description: 'Интерактивная карта мест: метки людей вокруг, маршруты и ваши собственные точки в реальном времени.',
         lang: 'ru',
         dir: 'ltr',
@@ -162,6 +170,7 @@ export default defineConfig(({ command }) => ({
 
   define: {
     __APP_VERSION__: JSON.stringify(resolveAppVersion()),
+    __APP_NAME__: JSON.stringify(APP_NAME),
   },
 
   css: {

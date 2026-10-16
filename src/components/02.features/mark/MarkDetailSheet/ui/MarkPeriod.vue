@@ -17,6 +17,12 @@ const props = defineProps<{
 const DAY_TITLES: [string, string, string] = ['день', 'дня', 'дней']
 const isMultiDayPeriod = computed(() => (props.date.daysPassed + props.date.daysLeft) > 0)
 
+const ENDED_STATUSES = new Set(['ended', 'expired', 'finished', 'inactive'])
+const isEnded = computed(() => {
+  const endAt = Date.parse(props.date.endAt)
+  return ENDED_STATUSES.has(props.meta.status.toLowerCase()) || (Number.isFinite(endAt) && endAt <= Date.now())
+})
+
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('ru-RU', {
     day: 'numeric',
@@ -41,12 +47,27 @@ function formatTime(dateStr: string) {
         class="header-icon"
       />
       <span class="label-text">ПЕРИОД АКТИВНОСТИ</span>
-      <u-flag
-        :status="meta.status"
-        class="status-flag"
+      <transition
+        name="status-swap"
+        mode="out-in"
       >
-        {{ meta.status }}
-      </u-flag>
+        <span
+          :key="isEnded ? 'ended' : 'active'"
+          class="status-pill"
+          :class="isEnded ? 'status-pill--ended' : 'status-pill--active'"
+        >
+          <u-icon
+            v-if="isEnded"
+            icon="app:check"
+            class="status-pill__check"
+          />
+          <span
+            v-else
+            class="status-pill__dot"
+          />
+          {{ isEnded ? 'Завершилась' : 'Активна' }}
+        </span>
+      </transition>
     </div>
 
     <div class="period-block__content">
@@ -114,10 +135,85 @@ function formatTime(dateStr: string) {
     .label-text {
       @include label-text();
     }
+  }
+}
 
-    .status-flag {
-      margin-left: auto;
+.status-pill {
+  --tone: var(--access-color);
+
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--tone);
+  background: color-mix(in srgb, var(--tone) 14%, transparent);
+  border: 0.5px solid color-mix(in srgb, var(--tone) 35%, transparent);
+
+  &--ended {
+    --tone: var(--text-color-muted);
+  }
+
+  &__dot {
+    position: relative;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--tone);
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: var(--tone);
+      animation: status-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
     }
+  }
+
+  &__check {
+    width: 12px;
+    height: 12px;
+    animation: status-check 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+}
+
+.status-swap-enter-active,
+.status-swap-leave-active {
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.status-swap-enter-from,
+.status-swap-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+@keyframes status-ping {
+  75%,
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+@keyframes status-check {
+  from {
+    transform: scale(0) rotate(-45deg);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-pill__dot::after,
+  .status-pill__check {
+    animation: none;
   }
 }
 

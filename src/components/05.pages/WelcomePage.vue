@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Capacitor } from '@capacitor/core'
+import { APP_NAME } from '@/components/00.shared/lib/appName'
 import { downloadAndroidApp } from '@/components/02.features/app/AppUpdate'
 import { useOnboarding } from '@/components/02.features/app/Onboarding/model/useOnboarding'
 import { openCommunityRules } from '@/components/02.features/info/CommunityRules'
@@ -134,7 +135,7 @@ function openGithub() {
                 </div>
 
                 <h1 class="slide-title">
-                  RealTimeMap
+                  {{ APP_NAME }}
                 </h1>
                 <p class="description">
                   Интерактивная карта для обмена событиями и координатами в реальном времени.

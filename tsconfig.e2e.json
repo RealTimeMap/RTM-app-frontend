@@ -10,6 +10,8 @@
   },
   "include": [
     "playwright.config.*",
-    "e2e/**/*"
+    "playwright.store.config.ts",
+    "e2e/**/*",
+    "store/**/*"
   ]
 }

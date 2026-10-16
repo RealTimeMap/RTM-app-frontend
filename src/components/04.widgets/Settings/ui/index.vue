@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import { APP_NAME } from '@/components/00.shared/lib/appName'
 import { useAuthStore } from '@/components/00.shared/stores/auth'
 import { useDialogStore } from '@/components/00.shared/stores/dialog'
 import EditProfile from '@/components/02.features/profile/EditProfile'
@@ -113,7 +114,7 @@ function openEditProfile() {
       Выйти из аккаунта
     </button>
     <span class="version">
-      RealTimeMap · версия {{ appVersion }}
+      {{ APP_NAME }} · версия {{ appVersion }}
     </span>
   </div>
 </template>

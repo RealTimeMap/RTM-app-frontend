@@ -5,7 +5,7 @@
   "version": "0.0.0",
   "private": true,
   "description": "A public real-time map where users drop marks with messages, photos and a lifespan. Marks appear for everyone instantly and can be discussed in comments. Around the map: profiles with levels and achievements, direct chats and push notifications. Ships as a PWA and as native Android/iOS builds via Capacitor.",
-  "productName": "RealTime Map",
+  "productName": "PinLight",
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   },
@@ -16,7 +16,6 @@
     "build-only": "bun run icons && vite build",
     "icons": "node scripts/buildIcons.mjs",
     "icons:preview": "node scripts/buildIconsPreview.mjs",
-    "icons:favicon": "node scripts/buildFavicon.mjs",
     "models:optimize": "node scripts/optimizeModels.mjs",
     "type-check": "vue-tsc --build",
     "apk-build": "bun run build && bunx cap sync",
@@ -91,7 +90,6 @@
     "jiti": "^2.7.0",
     "lint-staged": "^17.2.0",
     "npm-run-all2": "^8.0.4",
-    "png-to-ico": "^3.0.2",
     "sass-embedded": "^1.100.0",
     "sharp": "^0.35.4",
     "simple-git-hooks": "^2.13.1",
