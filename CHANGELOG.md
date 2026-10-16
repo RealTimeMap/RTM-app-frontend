@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.79
+
+[compare changes](https://github.com/RealTimeMap/RTM-app-frontend/compare/v0.1.78...v0.1.79)
+
+### 🚀 Функциональность
+
+- **welcome:** Приветственный экран в стиле PinLight ([f2d5106](https://github.com/RealTimeMap/RTM-app-frontend/commit/f2d5106))
+
+### ❤️ Contributors
+
+- Hell-soon <pmaks2365@gmail.com>
+
 ## v0.1.78
 
 [compare changes](https://github.com/RealTimeMap/RealTimeMap-frontend/compare/v0.1.77...v0.1.78)
