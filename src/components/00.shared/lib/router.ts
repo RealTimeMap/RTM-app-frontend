@@ -1,6 +1,7 @@
 import type { RouteLocationNormalized, RouteRecordRaw } from 'vue-router'
 import type { RouteSeo } from '@/components/00.shared/lib/seo'
 import { createRouter, createWebHistory } from 'vue-router'
+import { APP_NAME } from '@/components/00.shared/lib/appName'
 import { hasSeenOnboarding } from '@/components/00.shared/lib/onboardingFlag'
 import { pageTransition, resolvePageTransition } from '@/components/00.shared/lib/pageTransition'
 import { applyRouteSeo } from '@/components/00.shared/lib/seo'
@@ -21,7 +22,7 @@ const routes: RouteRecordRaw[] = [
       depth: 1,
       seo: {
         title: 'Знакомство',
-        description: 'RealTimeMap — карта мест рядом с вами: метки, маршруты и живые события.',
+        description: `${APP_NAME} — карта мест рядом с вами: метки, маршруты и живые события.`,
       },
     },
   },
@@ -107,7 +108,7 @@ const routes: RouteRecordRaw[] = [
       depth: 1,
       seo: {
         title: 'Мои места',
-        description: 'Личные метки, списки и группы в RealTimeMap.',
+        description: `Личные метки, списки и группы в ${APP_NAME}.`,
       },
     },
   },
@@ -130,7 +131,7 @@ const routes: RouteRecordRaw[] = [
           depth: 1,
           seo: {
             title: 'Чаты',
-            description: 'Ваши переписки в RealTimeMap.',
+            description: `Ваши переписки в ${APP_NAME}.`,
           },
         },
       },
@@ -144,7 +145,7 @@ const routes: RouteRecordRaw[] = [
           hideBottomNav: true,
           seo: {
             title: 'Чат',
-            description: 'Переписка в RealTimeMap.',
+            description: `Переписка в ${APP_NAME}.`,
           },
         },
       },
@@ -160,7 +161,7 @@ const routes: RouteRecordRaw[] = [
       depth: 1,
       seo: {
         title: 'Восстановление пароля',
-        description: 'Установите новый пароль для входа в RealTimeMap.',
+        description: `Установите новый пароль для входа в ${APP_NAME}.`,
       },
     },
   },
@@ -197,7 +198,7 @@ const routes: RouteRecordRaw[] = [
       depth: 1,
       seo: {
         title: 'Страница не найдена',
-        description: 'Такой страницы нет. Вернитесь на карту RealTimeMap.',
+        description: `Такой страницы нет. Вернитесь на карту ${APP_NAME}.`,
       },
     },
   },

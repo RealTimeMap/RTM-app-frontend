@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Mark } from '@/components/00.shared/services/mark/index.type'
 import type { User } from '@/components/00.shared/services/user/index.type'
+import { APP_NAME } from '@/components/00.shared/lib/appName'
 import { isSameMarksPreview, loadProfileMarks, profileMarksCache } from '@/components/00.shared/lib/profileCache'
 import { useAuthStore } from '@/components/00.shared/stores/auth'
 import { useChatsStore } from '@/components/00.shared/stores/chats'
@@ -194,7 +195,7 @@ function openMark(markId: number) {
       >
         <div class="admin-tip">
           <u-admin-badge :size="16" />
-          <span><b>Администратор</b> RealTimeMap — следит за порядком на карте</span>
+          <span><b>Администратор</b> {{ APP_NAME }} — следит за порядком на карте</span>
         </div>
       </u-tooltip>
     </div>

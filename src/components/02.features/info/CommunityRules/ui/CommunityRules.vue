@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { APP_NAME } from '@/components/00.shared/lib/appName'
 import { useDialogStore } from '@/components/00.shared/stores/dialog'
 import { OPERATOR } from '@/components/02.features/info/LegalPolicy'
 import { RULES_DOC, RULES_VERSION } from '../model/rules'
@@ -298,7 +299,7 @@ const signText = computed(() => {
               {{ OPERATOR.name }}
             </template>
             <template v-else>
-              Оператор приложения «RealTimeMap»
+              Оператор приложения «{{ APP_NAME }}»
             </template>
             <template v-if="filled(OPERATOR.inn)">
               <br>ИНН {{ OPERATOR.inn }}
@@ -325,7 +326,7 @@ const signText = computed(() => {
       </div>
 
       <p class="rules-lead">
-        RealTimeMap — карта живых мест, меток и событий вокруг вас. Настоящие
+        {{ APP_NAME }} — карта живых мест, меток и событий вокруг вас. Настоящие
         Правила определяют, что запрещено в приложении и какие меры применяются за
         нарушения. Используя приложение, вы принимаете эти Правила.
       </p>

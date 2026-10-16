@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { APP_NAME } from '@/components/00.shared/lib/appName'
 import { useDialogStore } from '@/components/00.shared/stores/dialog'
 import RoadmapTimeline from './RoadmapTimeline.vue'
 
@@ -20,7 +21,7 @@ const { close } = useDialogStore()
 
     <div class="roadmap-body">
       <p class="roadmap-lead">
-        Куда движется RealTimeMap: что уже в работе и что мы планируем добавить.
+        Куда движется {{ APP_NAME }}: что уже в работе и что мы планируем добавить.
         Список и приоритеты могут меняться.
       </p>
 

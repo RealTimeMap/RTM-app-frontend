@@ -1,12 +1,14 @@
+import { APP_NAME } from './appName'
+
 export interface RouteSeo {
   title?: string
   description?: string
 }
 
-const SITE_NAME = 'RealTimeMap'
-const DEFAULT_TITLE = 'RealTimeMap — карта мест, метки и маршруты рядом с вами'
+const SITE_NAME = APP_NAME
+const DEFAULT_TITLE = `${APP_NAME} — карта мест, метки и маршруты рядом с вами`
 const DEFAULT_DESCRIPTION
-  = 'RealTimeMap — интерактивная карта мест: смотрите метки людей вокруг, стройте маршруты и делитесь своими местами.'
+  = `${APP_NAME} — интерактивная карта мест: смотрите метки людей вокруг, стройте маршруты и делитесь своими местами.`
 
 function setMeta(selector: string, attr: 'name' | 'property', key: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(selector)

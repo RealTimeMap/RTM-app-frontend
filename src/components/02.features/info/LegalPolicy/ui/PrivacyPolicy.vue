@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { APP_NAME } from '@/components/00.shared/lib/appName'
 import { useDialogStore } from '@/components/00.shared/stores/dialog'
 import { OPERATOR, POLICY_VERSION } from '../model/policy'
 
@@ -21,7 +22,7 @@ const { close } = useDialogStore()
     <div class="policy-body">
       <p class="policy-lead">
         Политика в отношении обработки персональных данных в мобильном
-        приложении «RealTimeMap» (далее — «Приложение»).
+        приложении «{{ APP_NAME }}» (далее — «Приложение»).
       </p>
       <p class="policy-meta">
         Редакция от {{ POLICY_VERSION }}
