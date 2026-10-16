@@ -205,7 +205,7 @@ onUnmounted(() => {
 .places__tab-count {
   @include label-text(12px, none);
   opacity: 0.7;
-  line-height: 1.4;
+  line-height: 1;
 }
 
 .places__body {
