@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.77
+
+[compare changes](https://github.com/RealTimeMap/RealTimeMap-frontend/compare/v0.1.76...v0.1.77)
+
+### 🎨 Стили
+
+- **ui:** Высота текста ([e0eaac7](https://github.com/RealTimeMap/RealTimeMap-frontend/commit/e0eaac7))
+
+### ❤️ Contributors
+
+- Hell-soon <pmaks2365@gmail.com>
+
 ## v0.1.76
 
 [compare changes](https://github.com/RealTimeMap/RealTimeMap-frontend/compare/v0.1.75...v0.1.76)
