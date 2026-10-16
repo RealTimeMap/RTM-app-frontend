@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v0.1.78
+
+[compare changes](https://github.com/RealTimeMap/RealTimeMap-frontend/compare/v0.1.77...v0.1.78)
+
+### 🚀 Функциональность
+
+- **shared:** Портрет на телефонах, анимированный статус метки, удалён buildFavicon ([824255f](https://github.com/RealTimeMap/RealTimeMap-frontend/commit/824255f))
+- **name:** Приложение переименовано в PinLight, название берётся из package.json ([8acec49](https://github.com/RealTimeMap/RealTimeMap-frontend/commit/8acec49))
+
+### 🏡 Разное
+
+- **store:** Скриншоты и иконка для RuStore ([0577bec](https://github.com/RealTimeMap/RealTimeMap-frontend/commit/0577bec))
+
+### ❤️ Contributors
+
+- Hell-soon <pmaks2365@gmail.com>
+
 ## v0.1.77
 
 [compare changes](https://github.com/RealTimeMap/RealTimeMap-frontend/compare/v0.1.76...v0.1.77)
