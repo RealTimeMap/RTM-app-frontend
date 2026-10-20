@@ -270,8 +270,8 @@ const signText = computed(() => {
   if (filled(OPERATOR.name))
     s += ` оператором ${OPERATOR.name}`
   s += ' и является действительным без собственноручной подписи.'
-  if (filled(OPERATOR.address))
-    s += ` Адрес: ${OPERATOR.address}.`
+  // if (filled(OPERATOR.address))
+  //   s += ` Адрес: ${OPERATOR.address}.`
   if (filled(OPERATOR.email))
     s += ` Обращения: ${OPERATOR.email}.`
   return s
