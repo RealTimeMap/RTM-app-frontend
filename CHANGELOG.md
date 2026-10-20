@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.82
+
+[compare changes](https://github.com/RealTimeMap/RTM-app-frontend/compare/v0.1.81...v0.1.82)
+
+### ⬆️ Обновления
+
+- **docs:** Новый пункт в полиси ([cc1cecd](https://github.com/RealTimeMap/RTM-app-frontend/commit/cc1cecd))
+
+### ❤️ Contributors
+
+- Hell-soon <pmaks2365@gmail.com>
+
 ## v0.1.81
 
 [compare changes](https://github.com/RealTimeMap/RTM-app-frontend/compare/v0.1.80...v0.1.81)
