@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.81
+
+[compare changes](https://github.com/RealTimeMap/RTM-app-frontend/compare/v0.1.80...v0.1.81)
+
+### ⬆️ Обновления
+
+- **docs:** Обновление 152 фз ([520dc3c](https://github.com/RealTimeMap/RTM-app-frontend/commit/520dc3c))
+
+### ❤️ Contributors
+
+- Hell-soon <pmaks2365@gmail.com>
+
 ## v0.1.80
 
 [compare changes](https://github.com/RealTimeMap/RTM-app-frontend/compare/v0.1.79...v0.1.80)
