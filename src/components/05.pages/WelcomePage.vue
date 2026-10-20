@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Capacitor } from '@capacitor/core'
 import { APP_NAME } from '@/components/00.shared/lib/appName'
+import { TELEGRAM_CHANNEL_URL } from '@/components/00.shared/lib/links'
 import { downloadAndroidApp } from '@/components/02.features/app/AppUpdate'
 import { useOnboarding } from '@/components/02.features/app/Onboarding/model/useOnboarding'
 import { openCommunityRules } from '@/components/02.features/info/CommunityRules'
@@ -158,6 +159,10 @@ async function handleNext() {
 function openGithub() {
   window.open('https://github.com/RealTimeMap', '_blank')
 }
+
+function openTelegram() {
+  window.open(TELEGRAM_CHANNEL_URL, '_blank')
+}
 </script>
 
 <template>
@@ -299,18 +304,33 @@ function openGithub() {
                 <li>Не передавайте доступ к аккаунту третьим лицам.</li>
               </ul>
 
-              <button
-                type="button"
-                class="github-btn"
-                @click="openGithub"
-              >
-                <u-icon
-                  icon="app:github"
-                  height="16"
-                  width="16"
-                />
-                Исходный код на GitHub
-              </button>
+              <div class="socials">
+                <button
+                  type="button"
+                  class="social-btn"
+                  @click="openTelegram"
+                >
+                  <u-icon
+                    icon="app:telegram"
+                    height="16"
+                    width="16"
+                  />
+                  Наш Telegram
+                </button>
+
+                <button
+                  type="button"
+                  class="social-btn"
+                  @click="openGithub"
+                >
+                  <u-icon
+                    icon="app:github"
+                    height="16"
+                    width="16"
+                  />
+                  Исходный код на GitHub
+                </button>
+              </div>
             </template>
           </div>
         </transition>
@@ -683,11 +703,18 @@ function openGithub() {
   }
 }
 
-.github-btn {
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 20px;
+  margin-top: auto;
+}
+
+.social-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: auto;
   border: none;
   background: transparent;
   font-size: 14px;

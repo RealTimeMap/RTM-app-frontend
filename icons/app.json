@@ -407,6 +407,9 @@
     },
     "weather-storm": {
       "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M7 15a4 4 0 0 1 -.5 -7.97a5.5 5.5 0 0 1 10.6 -1.2A4 4 0 0 1 17 15Z\"/><path d=\"M12.5 15l-2 3.5h3l-2 3.5\"/></g>"
+    },
+    "telegram": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4\" pathLength=\"1\" stroke-dasharray=\"1\" stroke-dashoffset=\"1\"><animate attributeName=\"stroke-dashoffset\" fill=\"freeze\" dur=\"0.9s\" values=\"1;0\"/></path></g>"
     }
   }
 }
