@@ -86,8 +86,8 @@ src/components/
 Нужны [Node.js](https://nodejs.org/) 20.19+ и [Bun](https://bun.sh/).
 
 ```sh
-git clone https://github.com/RealTimeMap/RealTimeMap-frontend.git
-cd RealTimeMap-frontend
+git clone https://github.com/RealTimeMap/RTM-app-frontend.git
+cd RTM-app-frontend
 bun install
 ```
 
