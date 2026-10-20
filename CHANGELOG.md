@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.1.83
+
+[compare changes](https://github.com/RealTimeMap/RTM-app-frontend/compare/v0.1.82...v0.1.83)
+
+### 🚀 Функциональность
+
+- **info:** Ссылка на Telegram-канал в настройках и на приветственном экране ([2e7cb56](https://github.com/RealTimeMap/RTM-app-frontend/commit/2e7cb56))
+
+### 🩹 Исправления
+
+- **upd:** Новое имя репозитория ([3cc56c1](https://github.com/RealTimeMap/RTM-app-frontend/commit/3cc56c1))
+
+### ❤️ Contributors
+
+- Hell-soon <pmaks2365@gmail.com>
+
 ## v0.1.82
 
 [compare changes](https://github.com/RealTimeMap/RTM-app-frontend/compare/v0.1.81...v0.1.82)
