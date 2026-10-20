@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.2.0
+
+[compare changes](https://github.com/RealTimeMap/RTM-app-frontend/compare/v0.1.83...v0.2.0)
+
+### 📦 Сборка
+
+- **android:** ⚠️  Релизная сборка APK с подписью из секретов ([099bb27](https://github.com/RealTimeMap/RTM-app-frontend/commit/099bb27))
+
+#### ⚠️ Breaking Changes
+
+- **android:** ⚠️  Релизная сборка APK с подписью из секретов ([099bb27](https://github.com/RealTimeMap/RTM-app-frontend/commit/099bb27))
+
+### ❤️ Contributors
+
+- Hell-soon <pmaks2365@gmail.com>
+
 ## v0.1.83
 
 [compare changes](https://github.com/RealTimeMap/RTM-app-frontend/compare/v0.1.82...v0.1.83)
