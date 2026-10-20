@@ -143,12 +143,23 @@ jobs:
         if: steps.bump.outputs.CHANGED == 'true'
         run: bunx cap sync android
 
-      - name: Build Android Debug APK
+      - name: Build Android Release APK
         if: steps.bump.outputs.CHANGED == 'true'
         env:
           APP_VERSION: ${{ steps.bump.outputs.APP_VERSION }}
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          cd android && ./gradlew assembleDebug
+          # без релизного ключа gradle молча подпишет debug-ключом — такой APK магазины не примут
+          if [ -z "$ANDROID_KEYSTORE_BASE64" ]; then
+            echo "Не задан секрет ANDROID_KEYSTORE_BASE64"
+            exit 1
+          fi
+          export ANDROID_KEYSTORE_PATH="$RUNNER_TEMP/release.jks"
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$ANDROID_KEYSTORE_PATH"
+          cd android && ./gradlew assembleRelease
 
       - name: Create GitHub Release
         if: steps.bump.outputs.CHANGED == 'true'
@@ -156,7 +167,7 @@ jobs:
         with:
           tag: v${{ steps.bump.outputs.APP_VERSION }}
           name: Release v${{ steps.bump.outputs.APP_VERSION }}
-          artifacts: android/app/build/outputs/apk/debug/rtm.apk
+          artifacts: android/app/build/outputs/apk/release/rtm.apk
           bodyFile: release-notes.md
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
