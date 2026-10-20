@@ -9,5 +9,5 @@ test('на компьютере «Скачать приложение» пока
 
   await expect(page.getByRole('img', { name: /QR-код/ }).locator('svg')).toBeVisible()
   await expect(page.getByRole('link', { name: /на этот компьютер/ }))
-    .toHaveAttribute('href', 'https://github.com/RealTimeMap/RealTimeMap-frontend/releases/latest/download/rtm.apk')
+    .toHaveAttribute('href', 'https://github.com/RealTimeMap/RTM-app-frontend/releases/latest/download/rtm.apk')
 })

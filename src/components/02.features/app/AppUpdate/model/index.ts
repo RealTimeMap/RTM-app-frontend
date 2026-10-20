@@ -7,7 +7,7 @@ import { ANDROID_APK_URL } from './links'
 import { summarizeRelease } from './summarizeRelease'
 
 declare const __APP_VERSION__: string
-const GITHUB_REPO = 'RealTimeMap/RealTimeMap-frontend'
+const GITHUB_REPO = 'RealTimeMap/RTM-app-frontend'
 const API_GITHUB_RELEASES_LATEST = `https://api.github.com/repos/${GITHUB_REPO}/releases/latest`
 
 interface UpdateAction {

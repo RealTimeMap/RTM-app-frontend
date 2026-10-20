@@ -1,14 +1,26 @@
 <script setup lang="ts">
+import { TELEGRAM_CHANNEL_URL } from '@/components/00.shared/lib/links'
 import { openBugReport } from '@/components/02.features/app/BugReport'
 import { openCommunityRules } from '@/components/02.features/info/CommunityRules'
 import { openPrivacyPolicy } from '@/components/02.features/info/LegalPolicy'
 import { openRoadmap } from '@/components/02.features/info/Roadmap'
 import SettingsRow from '../kit/SettingsRow.vue'
 import SettingsSection from '../kit/SettingsSection.vue'
+
+function openTelegram() {
+  window.open(TELEGRAM_CHANNEL_URL, '_blank')
+}
 </script>
 
 <template>
   <settings-section title="О приложении">
+    <settings-row
+      link
+      label="Наш Telegram-канал"
+      hint="Новости, обновления и обсуждение"
+      @click="openTelegram()"
+    />
+
     <settings-row
       link
       label="Дорожная карта"
