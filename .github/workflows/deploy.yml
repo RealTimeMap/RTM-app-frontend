@@ -159,7 +159,17 @@ jobs:
           fi
           export ANDROID_KEYSTORE_PATH="$RUNNER_TEMP/release.jks"
           echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$ANDROID_KEYSTORE_PATH"
-          cd android && ./gradlew assembleRelease
+          cd android && ./gradlew assembleGithubRelease assembleRustoreRelease
+
+      # RuStore-сборку не кладём в GitHub Release: старые версии берут оттуда первый же .apk
+      # и могли бы обновиться на неё. Её скачивают из артефактов прогона и грузят в RuStore руками.
+      - name: Upload RuStore APK
+        if: steps.bump.outputs.CHANGED == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: rtm-rustore-v${{ steps.bump.outputs.APP_VERSION }}
+          path: android/app/build/outputs/apk/rustore/release/rtm-rustore.apk
+          if-no-files-found: error
 
       - name: Create GitHub Release
         if: steps.bump.outputs.CHANGED == 'true'
@@ -167,7 +177,7 @@ jobs:
         with:
           tag: v${{ steps.bump.outputs.APP_VERSION }}
           name: Release v${{ steps.bump.outputs.APP_VERSION }}
-          artifacts: android/app/build/outputs/apk/release/rtm.apk
+          artifacts: android/app/build/outputs/apk/github/release/rtm.apk
           bodyFile: release-notes.md
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true

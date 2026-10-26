@@ -79,10 +79,25 @@ android {
         }
     }
 
-    // Итоговый APK называем rtm.apk вместо app-<variant>.apk
+    // github — APK для GitHub Releases с самообновлением (REQUEST_INSTALL_PACKAGES в src/github).
+    // rustore — без самообновления: магазин сам ставит обновления и не пропускает это разрешение.
+    flavorDimensions = ['store']
+    productFlavors {
+        github {
+            dimension 'store'
+            resValue 'string', 'distribution', 'github'
+        }
+        rustore {
+            dimension 'store'
+            resValue 'string', 'distribution', 'rustore'
+        }
+    }
+
+    // Итоговый APK называем rtm.apk / rtm-rustore.apk вместо app-<flavor>-<type>.apk.
+    // Имя rtm.apk менять нельзя: на него ссылаются старые версии и страница скачивания.
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            output.outputFileName = "rtm.apk"
+            output.outputFileName = variant.flavorName == 'rustore' ? 'rtm-rustore.apk' : 'rtm.apk'
         }
     }
 }

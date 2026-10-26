@@ -13,6 +13,7 @@ public class MainActivity extends BridgeActivity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         registerPlugin(LiveCapsulePlugin.class);
+        registerPlugin(DistributionPlugin.class);
         super.onCreate(savedInstanceState);
     }
 }

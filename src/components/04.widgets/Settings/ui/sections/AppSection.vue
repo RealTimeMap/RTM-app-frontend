@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Capacitor } from '@capacitor/core'
 import { storeToRefs } from 'pinia'
+import { getDistribution } from '@/components/00.shared/lib/distribution'
 import { preferenceLabel } from '@/components/00.shared/lib/theme'
 import { useSettingsStore } from '@/components/00.shared/stores/settings'
 import { checkForUpdates, downloadAndroidApp } from '@/components/02.features/app/AppUpdate'
@@ -18,6 +19,11 @@ const {
 
 const isNative = Capacitor.isNativePlatform()
 const showDownloadApp = !isNative
+const updateHint = ref('Скачать последнюю версию, если доступна')
+getDistribution().then((store) => {
+  if (store === 'rustore')
+    updateHint.value = 'Открыть страницу в RuStore'
+})
 const showHaptics = false
 </script>
 
@@ -70,7 +76,7 @@ const showHaptics = false
       v-if="isNative"
       link
       label="Проверить обновление"
-      hint="Скачать последнюю версию, если доступна"
+      :hint="updateHint"
       chevron="app:refresh"
       @click="checkForUpdates()"
     />
