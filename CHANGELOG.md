@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.2.1
+
+[compare changes](https://github.com/RealTimeMap/RTM-app-frontend/compare/v0.2.0...v0.2.1)
+
+### 🚀 Функциональность
+
+- **android:** Отдельная сборка для RuStore без самообновления ([cab9be5](https://github.com/RealTimeMap/RTM-app-frontend/commit/cab9be5))
+
+### ❤️ Contributors
+
+- Hell-soon <pmaks2365@gmail.com>
+
 ## v0.2.0
 
 [compare changes](https://github.com/RealTimeMap/RTM-app-frontend/compare/v0.1.83...v0.2.0)
