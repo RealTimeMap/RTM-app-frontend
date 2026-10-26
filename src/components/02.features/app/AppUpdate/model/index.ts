@@ -2,8 +2,9 @@ import { FileOpener } from '@capacitor-community/file-opener'
 import { Capacitor } from '@capacitor/core'
 import { Directory, Filesystem } from '@capacitor/filesystem'
 import { compareVersions } from 'compare-versions'
+import { getDistribution } from '@/components/00.shared/lib/distribution'
 import { useNotificationStore } from '@/components/00.shared/stores/notification'
-import { ANDROID_APK_URL } from './links'
+import { ANDROID_APK_URL, RUSTORE_APP_URL } from './links'
 import { summarizeRelease } from './summarizeRelease'
 
 declare const __APP_VERSION__: string
@@ -45,6 +46,10 @@ export async function initUpdateChecker() {
   if (!Capacitor.isNativePlatform())
     return
 
+  // обновлениями из RuStore управляет сам магазин
+  if (await getDistribution() === 'rustore')
+    return
+
   const notify = useNotificationStore()
 
   try {
@@ -77,6 +82,11 @@ export async function initUpdateChecker() {
 }
 
 export async function checkForUpdates() {
+  if (await getDistribution() === 'rustore') {
+    window.open(RUSTORE_APP_URL, '_blank')
+    return
+  }
+
   const notify = useNotificationStore()
 
   try {
